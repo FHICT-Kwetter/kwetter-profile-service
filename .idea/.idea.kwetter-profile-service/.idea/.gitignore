@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/modules.xml
+/contentModel.xml
+/.idea.kwetter-profile-service.iml
+# Datasource local storage ignored files
+/../../../../../../../../../:\Users\Dirk\Desktop\s6\kwetter-profile-service\.idea\.idea.kwetter-profile-service\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
