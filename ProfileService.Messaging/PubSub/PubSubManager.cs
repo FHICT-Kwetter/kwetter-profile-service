@@ -3,12 +3,18 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
+using System.Linq;
+using MediatR;
+using ProfileService.Messaging.Common.Attributes;
+using ProfileService.Messaging.Common.Events;
+
 namespace ProfileService.Messaging.PubSub
 {
     using System;
     using KubeMQ.SDK.csharp.Events;
     using KubeMQ.SDK.csharp.Subscription;
     using KubeMQ.SDK.csharp.Tools;
+    using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
     using ProfileService.Messaging.Configuration;
 
@@ -18,6 +24,8 @@ namespace ProfileService.Messaging.PubSub
     /// </summary>
     public class PubSubManager
     {
+        private readonly IMediator mediator;
+
         /// <summary>
         /// The <see cref="KubeMqOptions"/>.
         /// </summary>
@@ -27,9 +35,10 @@ namespace ProfileService.Messaging.PubSub
         /// Initializes a new instance of the <see cref="PubSubManager"/> class.
         /// </summary>
         /// <param name="options">The kubemq server configuration.</param>
-        public PubSubManager(KubeMqOptions options)
+        public PubSubManager(KubeMqOptions options, IMediator mediator)
         {
             this.options = options;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -123,7 +132,23 @@ namespace ProfileService.Messaging.PubSub
         {
             return receive =>
             {
-                Console.WriteLine($"Event received: Id: {receive.EventID} and Body: {Converter.FromByteArray(receive.Body)}");
+                var allEventNotifications = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(x => x.GetTypes())
+                    .ToList()
+                    .Where(t => t.GetCustomAttributes(typeof(EventTypeAttribute), true).Length > 0)
+                    .Select(Activator.CreateInstance)
+                    .Cast<IEventNotification>()
+                    .Where(x =>
+                    {
+                        var type = (EventTypeAttribute)x.GetType().GetCustomAttributes(typeof(EventTypeAttribute), true).FirstOrDefault();
+                        return type?.Name == receive.Metadata;
+                    })
+                    .ToList();
+
+                foreach (var eventNotification in allEventNotifications)
+                {
+                    this.mediator.Publish(JsonConvert.DeserializeObject(Converter.FromByteArray(receive.Body).ToString(), eventNotification.GetType()));
+                }
             };
         }
 
@@ -134,5 +159,5 @@ namespace ProfileService.Messaging.PubSub
                 Console.WriteLine($"Error received: {error.Message}");
             };
         }
-    }
+    }   
 }

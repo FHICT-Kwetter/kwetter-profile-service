@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <UserSecretsId>aspnet-ProfileService.Api-6BF039AF-99F3-411F-B284-5EDA062E0903</UserSecretsId>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
     </PropertyGroup>
 
     <ItemGroup>
@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ProfileService.Messaging\ProfileService.Messaging.csproj" />
+      <ProjectReference Include="..\ProfileService.Service\ProfileService.Service.csproj" />
     </ItemGroup>
 
 </Project>

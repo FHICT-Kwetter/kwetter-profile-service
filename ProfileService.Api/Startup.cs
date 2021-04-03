@@ -5,12 +5,15 @@
 
 namespace ProfileService.Api
 {
+    using KubeMQ.SDK.csharp.Subscription;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using ProfileService.Api.Extensions;
     using ProfileService.Messaging.Extensions;
+    using ProfileService.Messaging.KubeMq;
+    using ProfileService.Service.Extensions;
 
     /// <summary>
     /// Defines the <see cref="Startup" />.
@@ -41,6 +44,7 @@ namespace ProfileService.Api
             services.AddControllers();
             services.AddIdentityServerAuthorization(this.configuration);
             services.AddKubeMqMessaging(this.configuration);
+            services.AddServiceLayer(this.configuration);
         }
 
         /// <summary>
@@ -49,12 +53,14 @@ namespace ProfileService.Api
         /// </summary>
         /// <param name="app">The application.</param>
         /// <param name="env">The environment.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IKubeMqServer kubeMqServer)
         {
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
+            kubeMqServer.PubSubManager.SubscribeToEventStore("users", EventsStoreType.StartNewOnly);
         }
     }
 }
