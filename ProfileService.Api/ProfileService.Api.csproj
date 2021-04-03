@@ -15,10 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\ProfileService.Messaging\ProfileService.Messaging.csproj" />
       <ProjectReference Include="..\ProfileService.Service\ProfileService.Service.csproj" />
     </ItemGroup>
