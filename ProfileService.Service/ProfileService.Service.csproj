@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ProfileService.Domain\ProfileService.Domain.csproj" />
       <ProjectReference Include="..\ProfileService.Messaging\ProfileService.Messaging.csproj" />
     </ItemGroup>
 

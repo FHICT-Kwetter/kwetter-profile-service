@@ -5,11 +5,15 @@
 
 namespace ProfileService.Api.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Net.Mime;
     using System.Threading.Tasks;
     using MediatR;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using ProfileService.Api.Contracts.Requests;
+    using ProfileService.Service.UseCases;
 
     [ApiController]
     [Authorize]
@@ -35,7 +39,17 @@ namespace ProfileService.Api.Controllers
         [HttpGet("{username}")]
         public async Task<IActionResult> ReadProfile([FromRoute] string username)
         {
-            return this.Ok(username);
+            var result = await this.mediator.Send(new ReadProfile(username));
+            return this.Ok(result);
+        }
+
+        [Authorize]
+        [HttpPut("me")]
+        public async Task<IActionResult> UpdateProfile([FromBody] EditProfileRequest request)
+        {
+            var userId = Guid.Parse(this.User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
+            var result = await this.mediator.Send(new UpdateProfile(userId, request.Bio, request.ImageLink));
+            return this.Ok(result);
         }
     }
 }
