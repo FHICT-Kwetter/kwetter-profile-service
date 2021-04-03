@@ -11,6 +11,7 @@ namespace ProfileService.Api
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using ProfileService.Api.Extensions;
+    using ProfileService.Data.Extensions;
     using ProfileService.Messaging.Extensions;
     using ProfileService.Messaging.KubeMq;
     using ProfileService.Service.Extensions;
@@ -45,6 +46,7 @@ namespace ProfileService.Api
             services.AddIdentityServerAuthorization(this.configuration);
             services.AddKubeMqMessaging(this.configuration);
             services.AddServiceLayer(this.configuration);
+            services.AddDatabaseLayer(this.configuration);
         }
 
         /// <summary>

@@ -1,8 +1,12 @@
 namespace ProfileService.Service.UseCases
 {
+    using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using ProfileService.Data.Contexts;
     using ProfileService.Domain.Models;
 
     public class ReadProfile : IRequest<Profile>
@@ -17,15 +21,30 @@ namespace ProfileService.Service.UseCases
 
     public class ReadProfileHandler : IRequestHandler<ReadProfile, Profile>
     {
-        public Task<Profile> Handle(ReadProfile request, CancellationToken cancellationToken)
+        private readonly ProfileContext context;
+
+        public ReadProfileHandler(ProfileContext context)
         {
-            throw new System.NotImplementedException();
+            this.context = context;
+        }
 
-            // Find the profile of the user with the matching username.
+        public async Task<Profile> Handle(ReadProfile request, CancellationToken cancellationToken)
+        {
+            var profile = await this.context.Profiles
+                .Where(x => string.Equals(x.Username, request.Username, StringComparison.CurrentCultureIgnoreCase))
+                .FirstOrDefaultAsync(cancellationToken);
 
-            // Throw NotFound error when the username was not found.
+            if (profile == null)
+            {
+                throw new Exception("Profile was not found!");
+            }
 
-            // Return profile object when the username was found.
+            return new Profile
+            {
+                Username = profile.Username,
+                Bio = profile.Bio,
+                ImageLink = profile.ImageUrl,
+            };
         }
     }
 }

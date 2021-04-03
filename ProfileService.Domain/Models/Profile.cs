@@ -20,6 +20,6 @@ namespace ProfileService.Domain.Models
         /// <summary>
         /// Get the username for which the profile belongs to, is read-only.
         /// </summary>
-        public string Username { get; }
+        public string Username { get; set; }
     }
 }
