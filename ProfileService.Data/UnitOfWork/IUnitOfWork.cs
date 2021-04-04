@@ -34,7 +34,7 @@ namespace ProfileService.Data.UnitOfWork
         /// <summary>
         /// The database context.
         /// </summary>
-        private readonly ProfileContext context;
+        private readonly IProfileContext context;
 
         /// <inheritdoc/>
         public IProfileRepository Profiles { get; }
@@ -43,7 +43,7 @@ namespace ProfileService.Data.UnitOfWork
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public UnitOfWork(ProfileContext context)
+        public UnitOfWork(IProfileContext context)
         {
             this.context = context;
             this.Profiles = new ProfileRepository(context);

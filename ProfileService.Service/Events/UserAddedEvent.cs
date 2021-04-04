@@ -8,7 +8,6 @@ namespace ProfileService.Service.Events
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
     using ProfileService.Data.UnitOfWork;
     using ProfileService.Domain.Models;
     using ProfileService.Messaging.Common.Attributes;
@@ -47,18 +46,11 @@ namespace ProfileService.Service.Events
         private readonly IUnitOfWork unitOfWork;
 
         /// <summary>
-        /// The Logger.
-        /// </summary>
-        private readonly ILogger<UserAddedEventHandler> logger;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="UserAddedEventHandler"/> class.
         /// </summary>
-        /// <param name="logger">The Logger.</param>
         /// <param name="unitOfWork">The <see cref="IUnitOfWork"/>.</param>
-        public UserAddedEventHandler(ILogger<UserAddedEventHandler> logger, IUnitOfWork unitOfWork)
+        public UserAddedEventHandler(IUnitOfWork unitOfWork)
         {
-            this.logger = logger;
             this.unitOfWork = unitOfWork;
         }
 

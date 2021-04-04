@@ -43,10 +43,10 @@ namespace ProfileService.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddIdentityServerAuthorization(this.configuration);
-            services.AddKubeMqMessaging(this.configuration);
-            services.AddServiceLayer(this.configuration);
             services.AddDatabaseLayer(this.configuration);
+            services.AddIdentityServerAuthorization(this.configuration);
+            services.AddServiceLayer(this.configuration);
+            services.AddKubeMqMessaging(this.configuration);
         }
 
         /// <summary>
@@ -58,6 +58,7 @@ namespace ProfileService.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IKubeMqServer kubeMqServer)
         {
             app.UseRouting();
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

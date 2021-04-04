@@ -3,19 +3,18 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
-using System.Linq;
-using MediatR;
-using ProfileService.Messaging.Common.Attributes;
-using ProfileService.Messaging.Common.Events;
-
 namespace ProfileService.Messaging.PubSub
 {
     using System;
+    using System.Linq;
     using KubeMQ.SDK.csharp.Events;
     using KubeMQ.SDK.csharp.Subscription;
     using KubeMQ.SDK.csharp.Tools;
+    using MediatR;
     using Microsoft.Extensions.DependencyInjection;
     using Newtonsoft.Json;
+    using ProfileService.Messaging.Common.Attributes;
+    using ProfileService.Messaging.Common.Events;
     using ProfileService.Messaging.Configuration;
 
     /// <summary>
@@ -24,7 +23,7 @@ namespace ProfileService.Messaging.PubSub
     /// </summary>
     public class PubSubManager
     {
-        private readonly IMediator mediator;
+        private readonly IServiceProvider provider;
 
         /// <summary>
         /// The <see cref="KubeMqOptions"/>.
@@ -35,10 +34,10 @@ namespace ProfileService.Messaging.PubSub
         /// Initializes a new instance of the <see cref="PubSubManager"/> class.
         /// </summary>
         /// <param name="options">The kubemq server configuration.</param>
-        public PubSubManager(KubeMqOptions options, IMediator mediator)
+        public PubSubManager(KubeMqOptions options, IServiceProvider provider)
         {
             this.options = options;
-            this.mediator = mediator;
+            this.provider = provider;
         }
 
         /// <summary>
@@ -147,7 +146,10 @@ namespace ProfileService.Messaging.PubSub
 
                 foreach (var eventNotification in allEventNotifications)
                 {
-                    this.mediator.Publish(JsonConvert.DeserializeObject(Converter.FromByteArray(receive.Body).ToString(), eventNotification.GetType()));
+                    using var scope = this.provider.CreateScope();
+                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                    var notification = JsonConvert.DeserializeObject(Converter.FromByteArray(receive.Body).ToString(), eventNotification.GetType());
+                    mediator.Publish(notification).GetAwaiter().GetResult();
                 }
             };
         }
@@ -159,5 +161,5 @@ namespace ProfileService.Messaging.PubSub
                 Console.WriteLine($"Error received: {error.Message}");
             };
         }
-    }   
+    }
 }

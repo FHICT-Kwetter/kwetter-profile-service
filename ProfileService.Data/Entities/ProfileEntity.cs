@@ -12,7 +12,7 @@ namespace ProfileService.Data.Entities
     /// <summary>
     /// Defines the ORM for the profile entity.
     /// </summary>
-    [Table("profiles", Schema = "profiles")]
+    [Table("Profiles", Schema = "Profiles")]
     public class ProfileEntity
     {
         /// <summary>

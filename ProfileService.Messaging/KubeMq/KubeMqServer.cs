@@ -27,9 +27,9 @@ namespace ProfileService.Messaging.KubeMq
 
         public GrpcManager GrpcManager { get; }
 
-        public KubeMqServer(IOptions<KubeMqOptions> options, IServiceProvider serviceProvider, IMediator mediator)
+        public KubeMqServer(IOptions<KubeMqOptions> options, IServiceProvider provider)
         {
-            this.PubSubManager = new PubSubManager(options.Value, mediator);
+            this.PubSubManager = new PubSubManager(options.Value, provider);
             this.QueueManager = new QueueManager(options.Value);
             this.GrpcManager = new GrpcManager(options.Value);
         }

@@ -63,13 +63,13 @@ namespace ProfileService.Data.Repositories
         /// <summary>
         /// The database context.
         /// </summary>
-        private readonly ProfileContext context;
+        private readonly IProfileContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProfileRepository"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public ProfileRepository(ProfileContext context)
+        public ProfileRepository(IProfileContext context)
         {
             this.context = context;
         }
@@ -104,7 +104,7 @@ namespace ProfileService.Data.Repositories
         {
             var foundProfile = await this.context.Profiles
                 .AsNoTracking()
-                .Where(x => string.Equals(x.Username, username, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => x.Username.ToLower() == username.ToLower())
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)
