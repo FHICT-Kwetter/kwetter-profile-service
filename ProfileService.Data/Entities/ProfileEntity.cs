@@ -32,6 +32,11 @@ namespace ProfileService.Data.Entities
         public string Username { get; set; }
 
         /// <summary>
+        /// Gets or sets the display name, a non-unique name the user can use in his profile.
+        /// </summary>
+        public string DisplayName { get; set; }
+
+        /// <summary>
         /// Gets or sets the Bio text of the profile.
         /// </summary>
         public string Bio { get; set; }

@@ -21,5 +21,10 @@ namespace ProfileService.Domain.Models
         /// Get the username for which the profile belongs to, is read-only.
         /// </summary>
         public string Username { get; set; }
+
+        /// <summary>
+        /// Gets or sets the display name, a non-unique name the user can use in his profile.
+        /// </summary>
+        public string DisplayName { get; set; }
     }
 }

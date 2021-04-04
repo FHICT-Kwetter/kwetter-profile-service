@@ -93,6 +93,7 @@ namespace ProfileService.Data.Repositories
                 Username = profile.Username,
                 Bio = profile.Bio,
                 ImageUrl = profile.ImageLink,
+                DisplayName = profile.Username,
             };
 
             await this.context.Profiles.AddAsync(profileEntity);
@@ -117,6 +118,7 @@ namespace ProfileService.Data.Repositories
                 Username = foundProfile.Username,
                 Bio = foundProfile.Bio,
                 ImageLink = foundProfile.ImageUrl,
+                DisplayName = foundProfile.DisplayName,
             };
         }
 
@@ -138,6 +140,7 @@ namespace ProfileService.Data.Repositories
                 Username = foundProfile.Username,
                 Bio = foundProfile.Bio,
                 ImageLink = foundProfile.ImageUrl,
+                DisplayName = foundProfile.DisplayName,
             };
         }
 

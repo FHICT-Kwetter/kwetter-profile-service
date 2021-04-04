@@ -1,7 +1,12 @@
-namespace ProfileService.Api.Contracts.Requests
+namespace ProfileService.Api.Contracts.Responses
 {
-    public class EditProfileRequest
+    public class ReadProfileResponse
     {
+        /// <summary>
+        /// The username of the user.
+        /// </summary>
+        public string Username { get; set; }
+
         /// <summary>
         /// The display name of the user.
         /// </summary>

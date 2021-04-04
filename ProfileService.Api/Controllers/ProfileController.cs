@@ -3,6 +3,8 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
+using ProfileService.Api.Contracts.Responses;
+
 namespace ProfileService.Api.Controllers
 {
     using System;
@@ -40,7 +42,14 @@ namespace ProfileService.Api.Controllers
         public async Task<IActionResult> ReadProfile([FromRoute] string username)
         {
             var result = await this.mediator.Send(new ReadProfile(username));
-            return this.Ok(result);
+            var profile = new ReadProfileResponse
+            {
+                Username = result.Username,
+                DisplayName = result.DisplayName,
+                Bio = result.Bio,
+                ImageLink = result.ImageLink,
+            };
+            return this.Ok(profile);
         }
 
         [Authorize]
