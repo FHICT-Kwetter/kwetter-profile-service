@@ -9,6 +9,7 @@ namespace ProfileService.Data.Extensions
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using ProfileService.Data.Contexts;
+    using ProfileService.Data.UnitOfWork;
 
     /// <summary>
     /// Defines extension methods on the <see cref="IServiceCollection"/>.
@@ -26,6 +27,8 @@ namespace ProfileService.Data.Extensions
             {
                 options.UseNpgsql(configuration.GetConnectionString("GoogleCloudSQL"));
             });
+
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
         }
     }
 }
