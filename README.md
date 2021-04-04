@@ -14,3 +14,6 @@ This repo contains all the source code for the kwetter profile microservice.
 | ProfileService.Messaging | This package contains all the pub/sub logic |
 | ProfileService.Service | This package contains the use cases |
 
+## Application Architecture
+
+![Application Architecture](https://ik.imagekit.io/5ii0qakqx65/Kwetter_-__Code__-__C3__-__Profile_Service__cSS3JHGEkn.png)
