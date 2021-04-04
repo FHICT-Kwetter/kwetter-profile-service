@@ -44,7 +44,7 @@ namespace ProfileService.Service.UseCases
         /// <returns>An awaitable task which returns the profile.</returns>
         public async Task<Profile> Handle(ReadProfile request, CancellationToken cancellationToken)
         {
-            var foundProfile = await this.unitOfWork.Profiles.FindByUsername(request.Username);
+            var foundProfile = await this.unitOfWork.Profiles.Read(request.Username);
 
             if (foundProfile == null)
             {

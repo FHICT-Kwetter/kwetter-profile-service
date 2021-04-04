@@ -19,19 +19,32 @@ namespace ProfileService.Data.Repositories
     public interface IProfileRepository
     {
         /// <summary>
-        /// Finds a profile by a username.
-        /// </summary>
-        /// <param name="username">The username to find the profile for.</param>
-        /// <returns>The <see cref="Profile"/> domain model.</returns>
-        Task<Profile> FindByUsername(string username);
-
-        /// <summary>
         /// Creates a new profile entry in the database.
         /// </summary>
         /// <param name="profile">The <see cref="Profile"/> to add to the database.</param>
         /// <param name="userId">The user id of the user creating the profile.</param>
         /// <returns>The created profile.</returns>
         Task<Profile> Create(Profile profile, Guid userId);
+
+        /// <summary>
+        /// Finds a profile by a username.
+        /// </summary>
+        /// <param name="username">The username to find the profile for.</param>
+        /// <returns>The <see cref="Profile"/> domain model.</returns>
+        Task<Profile> Read(string username);
+
+        /// <summary>
+        /// Updates an existing profile with new information.
+        /// </summary>
+        /// <param name="profile">The <see cref="Profile"/> with the new information.</param>
+        /// <returns>The updated profile.</returns>
+        Task<Profile> Update(Profile profile);
+
+        /// <summary>
+        /// Deletes a profile from the profile database.
+        /// </summary>
+        /// <param name="profile">The profile to delete.</param>
+        void Delete(Profile profile);
     }
 
     /// <summary>
@@ -54,7 +67,32 @@ namespace ProfileService.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Profile> FindByUsername(string username)
+        public async Task<Profile> Create(Profile profile, Guid userId)
+        {
+            if (await this.Read(profile.Username) != null)
+            {
+                throw new Exception("Profile with this username already exists");
+            }
+
+            if (await this.context.Profiles.FirstOrDefaultAsync(x => x.UserId == userId) != null)
+            {
+                throw new Exception("This user already has a profile");
+            }
+
+            var profileEntity = new ProfileEntity
+            {
+                UserId = userId,
+                Username = profile.Username,
+                Bio = profile.Bio,
+                ImageUrl = profile.ImageLink,
+            };
+
+            await this.context.Profiles.AddAsync(profileEntity);
+            return profile;
+        }
+
+        /// <inheritdoc/>
+        public async Task<Profile> Read(string username)
         {
             var foundProfile = await this.context.Profiles
                 .AsNoTracking()
@@ -75,28 +113,37 @@ namespace ProfileService.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Profile> Create(Profile profile, Guid userId)
+        public async Task<Profile> Update(Profile profile)
         {
-            if (await this.FindByUsername(profile.Username) != null)
+            var foundProfile = await this.context.Profiles
+                .Where(x => string.Equals(x.Username, profile.Username, StringComparison.CurrentCultureIgnoreCase))
+                .FirstOrDefaultAsync();
+
+            if (foundProfile == null)
             {
-                throw new Exception("Profile with this username already exists");
+                throw new Exception("Profile to update was not found!");
             }
 
-            if (await this.context.Profiles.FirstOrDefaultAsync(x => x.UserId == userId) != null)
-            {
-                throw new Exception("This user already has a profile");
-            }
+            foundProfile.Bio = profile.Bio;
+            foundProfile.ImageUrl = profile.ImageLink;
 
-            var profileEntity = new ProfileEntity
-            {
-                UserId = userId,
-                Username = profile.Username,
-                Bio = profile.Bio,
-                ImageUrl = profile.ImageLink,
-            };
-
-            await this.context.Profiles.AddAsync(profileEntity);
+            this.context.Update(foundProfile);
             return profile;
+        }
+
+        /// <inheritdoc/>
+        public async void Delete(Profile profile)
+        {
+            var foundProfile = await this.context.Profiles
+                .Where(x => string.Equals(x.Username, profile.Username, StringComparison.CurrentCultureIgnoreCase))
+                .FirstOrDefaultAsync();
+
+            if (foundProfile == null)
+            {
+                throw new Exception("Profile to delete was not found!");
+            }
+
+            this.context.Profiles.Remove(foundProfile);
         }
     }
 }
