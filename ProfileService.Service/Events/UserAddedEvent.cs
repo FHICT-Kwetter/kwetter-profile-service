@@ -9,6 +9,8 @@ namespace ProfileService.Service.Events
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using ProfileService.Data.UnitOfWork;
+    using ProfileService.Domain.Models;
     using ProfileService.Messaging.Common.Attributes;
     using ProfileService.Messaging.Common.Events;
 
@@ -40,6 +42,11 @@ namespace ProfileService.Service.Events
     internal sealed class UserAddedEventHandler : IEventNotificationHandler<UserAddedEvent>
     {
         /// <summary>
+        /// The <see cref="IUnitOfWork"/>.
+        /// </summary>
+        private readonly IUnitOfWork unitOfWork;
+
+        /// <summary>
         /// The Logger.
         /// </summary>
         private readonly ILogger<UserAddedEventHandler> logger;
@@ -48,9 +55,11 @@ namespace ProfileService.Service.Events
         /// Initializes a new instance of the <see cref="UserAddedEventHandler"/> class.
         /// </summary>
         /// <param name="logger">The Logger.</param>
-        public UserAddedEventHandler(ILogger<UserAddedEventHandler> logger)
+        /// <param name="unitOfWork">The <see cref="IUnitOfWork"/>.</param>
+        public UserAddedEventHandler(ILogger<UserAddedEventHandler> logger, IUnitOfWork unitOfWork)
         {
             this.logger = logger;
+            this.unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -61,7 +70,15 @@ namespace ProfileService.Service.Events
         /// <returns>An awaitable task.</returns>
         public async Task Handle(UserAddedEvent eventParam, CancellationToken cancellationToken)
         {
-            this.logger.LogInformation($"Event came in with: ID: {eventParam.UserId}, Email: {eventParam.Email} and Username: {eventParam.Username}");
+            var createdProfile = new Profile
+            {
+                Username = eventParam.Username,
+                Bio = string.Empty,
+                ImageLink = "https://ik.imagekit.io/5ii0qakqx65/profile_placeholder_i-fAWNvvvrMy.jpg",
+            };
+
+            await this.unitOfWork.Profiles.Create(createdProfile, eventParam.UserId);
+            await this.unitOfWork.SaveAsync();
         }
     }
 }

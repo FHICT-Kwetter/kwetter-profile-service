@@ -51,7 +51,8 @@ namespace ProfileService.Data.Repositories
         /// Deletes a profile from the profile database.
         /// </summary>
         /// <param name="profile">The profile to delete.</param>
-        void Delete(Profile profile);
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task Delete(Profile profile);
     }
 
     /// <summary>
@@ -160,7 +161,7 @@ namespace ProfileService.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async void Delete(Profile profile)
+        public async Task Delete(Profile profile)
         {
             var foundProfile = await this.context.Profiles
                 .Where(x => string.Equals(x.Username, profile.Username, StringComparison.CurrentCultureIgnoreCase))
