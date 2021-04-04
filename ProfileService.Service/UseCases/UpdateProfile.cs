@@ -1,51 +1,64 @@
+// <copyright file="UpdateProfile.cs" company="Kwetter">
+//     Copyright Kwetter. All rights reserved.
+// </copyright>
+// <author>Dirk Heijnen</author>
+
 namespace ProfileService.Service.UseCases
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
+    using ProfileService.Data.UnitOfWork;
     using ProfileService.Domain.Models;
 
-    public class UpdateProfile : IRequest<Profile>
+    /// <summary>
+    /// Defines the update profile usecase request.
+    /// </summary>
+    public sealed record UpdateProfile(Guid UserId, string Bio, string ImageLink) : IRequest<Profile>;
+
+    /// <summary>
+    /// Defines the update profile usercase handler.
+    /// </summary>
+    internal sealed class UpdateProfileHandler : IRequestHandler<UpdateProfile, Profile>
     {
-        public UpdateProfile(Guid userId, string bio, string imageLink)
+        /// <summary>
+        /// The <see cref="IUnitOfWork"/>.
+        /// </summary>
+        private readonly IUnitOfWork unitOfWork;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UpdateProfileHandler"/> class.
+        /// </summary>
+        /// <param name="unitOfWork">The <see cref="IUnitOfWork"/>.</param>
+        public UpdateProfileHandler(IUnitOfWork unitOfWork)
         {
-            UserId = userId;
-            Bio = bio;
-            ImageLink = imageLink;
+            this.unitOfWork = unitOfWork;
         }
 
         /// <summary>
-        /// The user id.
+        /// Executes the use case logic.
         /// </summary>
-        public Guid UserId { get; set; }
-
-        /// <summary>
-        /// The bio text in the profile.
-        /// </summary>
-        public string Bio { get; set; }
-
-        /// <summary>
-        /// The link to the profile image of the user.
-        /// </summary>
-        public string ImageLink { get; set; }
-        
-        
-    }
-
-    public class UpdateProfileHandler : IRequestHandler<UpdateProfile, Profile>
-    {
-        public Task<Profile> Handle(UpdateProfile request, CancellationToken cancellationToken)
+        /// <param name="request">The incoming request for the use case.</param>
+        /// <param name="cancellationToken">The cancellationtoken.</param>
+        /// <returns>An awaitable task which returns the updated profile.</returns>
+        public async Task<Profile> Handle(UpdateProfile request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
-
-            // Find user with id.
+            // Find profile with user id.
+            var profile = await this.unitOfWork.Profiles.Read(request.UserId);
 
             // Update bio or imagelink
+            profile.Bio = request.Bio;
+            profile.ImageLink = request.ImageLink;
 
-            // Save user
+            // Update profile
+            var updatedProfile = await this.unitOfWork.Profiles.Update(profile);
+
+            // Save the changes to the database transactionally.
+            await this.unitOfWork.SaveAsync();
 
             // Return updated profile data.
+            return updatedProfile;
         }
     }
 }

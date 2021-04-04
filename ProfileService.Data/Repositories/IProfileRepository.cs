@@ -34,6 +34,13 @@ namespace ProfileService.Data.Repositories
         Task<Profile> Read(string username);
 
         /// <summary>
+        /// Finds a profile by a user id.
+        /// </summary>
+        /// <param name="userId">The user id to find the profile for.</param>
+        /// <returns>The <see cref="Profile"/> domain model.</returns>
+        Task<Profile> Read(Guid userId);
+
+        /// <summary>
         /// Updates an existing profile with new information.
         /// </summary>
         /// <param name="profile">The <see cref="Profile"/> with the new information.</param>
@@ -97,6 +104,27 @@ namespace ProfileService.Data.Repositories
             var foundProfile = await this.context.Profiles
                 .AsNoTracking()
                 .Where(x => string.Equals(x.Username, username, StringComparison.CurrentCultureIgnoreCase))
+                .FirstOrDefaultAsync();
+
+            if (foundProfile == null)
+            {
+                return null;
+            }
+
+            return new Profile
+            {
+                Username = foundProfile.Username,
+                Bio = foundProfile.Bio,
+                ImageLink = foundProfile.ImageUrl,
+            };
+        }
+
+        /// <inheritdoc/>
+        public async Task<Profile> Read(Guid userId)
+        {
+            var foundProfile = await this.context.Profiles
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)
