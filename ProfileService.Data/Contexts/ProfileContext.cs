@@ -17,5 +17,13 @@ namespace ProfileService.Data.Contexts
         /// Gets or sets the profile entity db set.
         /// </summary>
         public DbSet<ProfileEntity> Profiles { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileContext"/> class.
+        /// </summary>
+        /// <param name="options">The database options.</param>
+        public ProfileContext(DbContextOptions<ProfileContext> options) : base(options)
+        {
+        }
     }
 }
