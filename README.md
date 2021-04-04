@@ -1,6 +1,6 @@
 ![CI/CD Pipeline](https://github.com/FHICT-Kwetter/kwetter-profile-service/workflows/cicd/badge.svg)
 
-#Overview
+# Overview
 
 This repo contains all the source code for the kwetter profile microservice.
 
