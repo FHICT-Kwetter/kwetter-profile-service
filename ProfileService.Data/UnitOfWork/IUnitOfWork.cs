@@ -3,6 +3,8 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
+using AutoMapper;
+
 namespace ProfileService.Data.UnitOfWork
 {
     using System.Threading.Tasks;
@@ -43,10 +45,12 @@ namespace ProfileService.Data.UnitOfWork
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public UnitOfWork(IProfileContext context)
+        /// <param name="mapper">The automapper.</param>
+        public UnitOfWork(IProfileContext context, IMapper mapper)
         {
             this.context = context;
-            this.Profiles = new ProfileRepository(context);
+
+            this.Profiles = new ProfileRepository(context, mapper);
         }
 
         /// <inheritdoc/>

@@ -3,6 +3,8 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
+using AutoMapper;
+
 namespace ProfileService.Data.Repositories
 {
     using System;
@@ -67,18 +69,25 @@ namespace ProfileService.Data.Repositories
         private readonly IProfileContext context;
 
         /// <summary>
+        /// The automapper.
+        /// </summary>
+        private readonly IMapper mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProfileRepository"/> class.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public ProfileRepository(IProfileContext context)
+        /// <param name="mapper">The automapper.</param>
+        public ProfileRepository(IProfileContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         /// <inheritdoc/>
         public async Task<Profile> Create(Profile profile, Guid userId)
         {
-            if (await this.Read(profile.Username) != null)
+            if (await this.context.Profiles.FirstOrDefaultAsync(x => x.Username.ToLower().Contains(profile.Username.ToLower())) != null)
             {
                 throw new ProfileCreationException("Profile with this username already exists.");
             }
@@ -94,7 +103,7 @@ namespace ProfileService.Data.Repositories
                 Username = profile.Username,
                 Bio = profile.Bio,
                 ImageUrl = profile.ImageLink,
-                DisplayName = profile.Username,
+                DisplayName = profile.DisplayName,
             };
 
             await this.context.Profiles.AddAsync(profileEntity);
@@ -106,7 +115,7 @@ namespace ProfileService.Data.Repositories
         {
             var foundProfile = await this.context.Profiles
                 .AsNoTracking()
-                .Where(x => x.Username.ToLower() == username.ToLower())
+                .Where(x => x.Username.ToLower().Contains(username.ToLower()))
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)
@@ -114,13 +123,7 @@ namespace ProfileService.Data.Repositories
                 throw new ProfileNotFoundException("Profile with the provided username was not found.");
             }
 
-            return new Profile
-            {
-                Username = foundProfile.Username,
-                Bio = foundProfile.Bio,
-                ImageLink = foundProfile.ImageUrl,
-                DisplayName = foundProfile.DisplayName,
-            };
+            return this.mapper.Map<Profile>(foundProfile);
         }
 
         /// <inheritdoc/>
@@ -136,20 +139,14 @@ namespace ProfileService.Data.Repositories
                 throw new ProfileNotFoundException("Profile with the provided userid was not found.");
             }
 
-            return new Profile
-            {
-                Username = foundProfile.Username,
-                Bio = foundProfile.Bio,
-                ImageLink = foundProfile.ImageUrl,
-                DisplayName = foundProfile.DisplayName,
-            };
+            return this.mapper.Map<Profile>(foundProfile);
         }
 
         /// <inheritdoc/>
         public async Task<Profile> Update(Profile profile)
         {
             var foundProfile = await this.context.Profiles
-                .Where(x => string.Equals(x.Username, profile.Username, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => x.Username.ToLower() == profile.Username.ToLower())
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)
@@ -168,7 +165,7 @@ namespace ProfileService.Data.Repositories
         public async Task Delete(Profile profile)
         {
             var foundProfile = await this.context.Profiles
-                .Where(x => string.Equals(x.Username, profile.Username, StringComparison.CurrentCultureIgnoreCase))
+                .Where(x => x.Username.ToLower() == profile.Username.ToLower())
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)

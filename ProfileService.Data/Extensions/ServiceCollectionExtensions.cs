@@ -30,6 +30,7 @@ namespace ProfileService.Data.Extensions
 
             services.AddScoped<IProfileContext, ProfileContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddAutoMapper(typeof(ServiceCollectionExtensions));
         }
     }
 }

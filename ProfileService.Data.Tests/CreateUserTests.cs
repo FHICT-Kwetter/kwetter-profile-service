@@ -1,17 +1,20 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using ProfileService.Data.Contexts;
+using ProfileService.Data.Mapping;
 using ProfileService.Data.UnitOfWork;
-using ProfileService.Domain.Models;
+using ProfileService.Domain.Exceptions;
+using Profile = ProfileService.Domain.Models.Profile;
 
 namespace ProfileService.Data.Tests
 {
     public class CreateUserTests
     {
         private IUnitOfWork unitOfWork;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -23,8 +26,12 @@ namespace ProfileService.Data.Tests
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             
+            // Create an instance of automapper
+            var config = new MapperConfiguration(options => options.AddProfile<ProfileMapping>());
+            var mapper = config.CreateMapper();
+            
             // Setup unit of work object.
-            this.unitOfWork = new UnitOfWork.UnitOfWork(context);
+            this.unitOfWork = new UnitOfWork.UnitOfWork(context, mapper);
         }
 
         [Test]
@@ -92,7 +99,7 @@ namespace ProfileService.Data.Tests
             await this.unitOfWork.SaveAsync();
             
             // Assert
-            Assert.That(async () => await this.unitOfWork.Profiles.Create(profileA, userIdA), Throws.Exception);
+            Assert.That(async () => await this.unitOfWork.Profiles.Create(profileA, userIdA), Throws.InstanceOf<ProfileCreationException>());
         }
     }
 }
