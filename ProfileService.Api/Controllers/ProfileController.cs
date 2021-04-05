@@ -3,8 +3,6 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
-using ProfileService.Api.Contracts.Responses;
-
 namespace ProfileService.Api.Controllers
 {
     using System;
@@ -15,6 +13,7 @@ namespace ProfileService.Api.Controllers
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using ProfileService.Api.Contracts.Requests;
+    using ProfileService.Api.Contracts.Responses;
     using ProfileService.Service.UseCases;
 
     [ApiController]
