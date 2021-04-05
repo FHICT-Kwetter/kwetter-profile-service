@@ -5,7 +5,6 @@
 
 namespace ProfileService.Service.UseCases
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using MediatR;
@@ -20,7 +19,7 @@ namespace ProfileService.Service.UseCases
     /// <summary>
     /// Defines the read profile usercase handler.
     /// </summary>
-    internal sealed class ReadProfileHandler : IRequestHandler<ReadProfile, Profile>
+    public class ReadProfileHandler : IRequestHandler<ReadProfile, Profile>
     {
         /// <summary>
         /// The <see cref="IUnitOfWork"/>.
@@ -44,14 +43,7 @@ namespace ProfileService.Service.UseCases
         /// <returns>An awaitable task which returns the profile.</returns>
         public async Task<Profile> Handle(ReadProfile request, CancellationToken cancellationToken)
         {
-            var foundProfile = await this.unitOfWork.Profiles.Read(request.Username);
-
-            if (foundProfile == null)
-            {
-                throw new Exception("Profile was not found");
-            }
-
-            return foundProfile;
+            return await this.unitOfWork.Profiles.Read(request.Username);
         }
     }
 }

@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Data.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Domain.Tests", "ProfileService.Domain.Tests\ProfileService.Domain.Tests.csproj", "{470653B7-3930-44FC-997E-D43A27D84E88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Service.Tests", "ProfileService.Service.Tests\ProfileService.Service.Tests.csproj", "{97ED640A-84F9-481A-80D2-64B3197BB339}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{470653B7-3930-44FC-997E-D43A27D84E88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{470653B7-3930-44FC-997E-D43A27D84E88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{470653B7-3930-44FC-997E-D43A27D84E88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97ED640A-84F9-481A-80D2-64B3197BB339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97ED640A-84F9-481A-80D2-64B3197BB339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97ED640A-84F9-481A-80D2-64B3197BB339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97ED640A-84F9-481A-80D2-64B3197BB339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

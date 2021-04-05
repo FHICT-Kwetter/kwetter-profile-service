@@ -21,7 +21,7 @@ namespace ProfileService.Service.UseCases
     /// <summary>
     /// Defines the update profile usercase handler.
     /// </summary>
-    internal sealed class UpdateProfileHandler : IRequestHandler<UpdateProfile, Profile>
+    public class UpdateProfileHandler : IRequestHandler<UpdateProfile, Profile>
     {
         /// <summary>
         /// The <see cref="IUnitOfWork"/>.
