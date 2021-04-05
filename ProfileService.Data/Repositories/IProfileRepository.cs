@@ -11,6 +11,7 @@ namespace ProfileService.Data.Repositories
     using Microsoft.EntityFrameworkCore;
     using ProfileService.Data.Contexts;
     using ProfileService.Data.Entities;
+    using ProfileService.Domain.Exceptions;
     using ProfileService.Domain.Models;
 
     /// <summary>
@@ -79,12 +80,12 @@ namespace ProfileService.Data.Repositories
         {
             if (await this.Read(profile.Username) != null)
             {
-                throw new Exception("Profile with this username already exists");
+                throw new ProfileCreationException("Profile with this username already exists.");
             }
 
             if (await this.context.Profiles.FirstOrDefaultAsync(x => x.UserId == userId) != null)
             {
-                throw new Exception("This user already has a profile");
+                throw new ProfileCreationException("This user already has a profile.");
             }
 
             var profileEntity = new ProfileEntity
@@ -110,7 +111,7 @@ namespace ProfileService.Data.Repositories
 
             if (foundProfile == null)
             {
-                return null;
+                throw new ProfileNotFoundException("Profile with the provided username was not found.");
             }
 
             return new Profile
@@ -132,7 +133,7 @@ namespace ProfileService.Data.Repositories
 
             if (foundProfile == null)
             {
-                return null;
+                throw new ProfileNotFoundException("Profile with the provided userid was not found.");
             }
 
             return new Profile
@@ -153,7 +154,7 @@ namespace ProfileService.Data.Repositories
 
             if (foundProfile == null)
             {
-                throw new Exception("Profile to update was not found!");
+                throw new ProfileNotFoundException("Profile to update was not found.");
             }
 
             foundProfile.Bio = profile.Bio;
@@ -172,7 +173,7 @@ namespace ProfileService.Data.Repositories
 
             if (foundProfile == null)
             {
-                throw new Exception("Profile to delete was not found!");
+                throw new ProfileNotFoundException("Profile to delete was not found.");
             }
 
             this.context.Profiles.Remove(foundProfile);
