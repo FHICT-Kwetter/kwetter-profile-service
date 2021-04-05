@@ -8,6 +8,7 @@ using ProfileService.Data.Mapping;
 using ProfileService.Data.UnitOfWork;
 using ProfileService.Domain.Exceptions;
 using ProfileService.Domain.Models;
+using ProfileService.Domain.Requests;
 using Profile = ProfileService.Domain.Models.Profile;
 
 namespace ProfileService.Data.Tests
@@ -52,7 +53,7 @@ namespace ProfileService.Data.Tests
             Assert.AreEqual(profile.Username, updatedProfiel.Username);
             Assert.AreEqual(profile.DisplayName, updatedProfiel.DisplayName);
             Assert.AreEqual(mutate.Bio, updatedProfiel.Bio);
-            Assert.AreEqual(profile.ImageLink, updatedProfiel.ImageLink);
+            Assert.AreEqual(profile.ImageUrl, updatedProfiel.ImageUrl);
         }
         
         [Test]
@@ -70,14 +71,14 @@ namespace ProfileService.Data.Tests
             Assert.AreEqual(profile.Username, updatedProfiel.Username);
             Assert.AreEqual(mutate.DisplayName, updatedProfiel.DisplayName);
             Assert.AreEqual(mutate.Bio, updatedProfiel.Bio);
-            Assert.AreEqual(profile.ImageLink, updatedProfiel.ImageLink);
+            Assert.AreEqual(profile.ImageUrl, updatedProfiel.ImageUrl);
         }
 
         [Test]
         public async Task Given_A_Non_Existing_Profile__When_Updating_Profile__Throws_Profile_Not_Found_Exception()
         {
             // Arrange
-            var profile = new Profile() {Username = "Non existing username" };
+            var profile = Profile.Create(new CreateProfileRequest { Username = "Non-existing profile" });
             
             // Act + Assert
             Assert.That(async () => await this.unitOfWork.Profiles.Update(profile), Throws.InstanceOf<ProfileNotFoundException>());
@@ -85,13 +86,13 @@ namespace ProfileService.Data.Tests
         
         private async Task<Profile> CreateTestProfile()
         {
-            var profile = new Profile
+            var profile = Profile.Create(new CreateProfileRequest
             {
                 Username = "tester",
                 Bio = "bio",
                 DisplayName = "Test Profile",
-                ImageLink = "imageLink"
-            };
+                ImageUrl = "ImageUrl"
+            });
 
             await this.unitOfWork.Profiles.Create(profile, userId);
             await this.unitOfWork.SaveAsync();

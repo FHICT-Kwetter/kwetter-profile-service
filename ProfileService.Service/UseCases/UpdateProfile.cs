@@ -11,11 +11,12 @@ namespace ProfileService.Service.UseCases
     using MediatR;
     using ProfileService.Data.UnitOfWork;
     using ProfileService.Domain.Models;
+    using ProfileService.Domain.Requests;
 
     /// <summary>
     /// Defines the update profile usecase request.
     /// </summary>
-    public sealed record UpdateProfile(Guid UserId, string Bio, string ImageLink) : IRequest<Profile>;
+    public sealed record UpdateProfile(Guid UserId, string Bio, string ImageUrl, string DisplayName) : IRequest<Profile>;
 
     /// <summary>
     /// Defines the update profile usercase handler.
@@ -44,21 +45,23 @@ namespace ProfileService.Service.UseCases
         /// <returns>An awaitable task which returns the updated profile.</returns>
         public async Task<Profile> Handle(UpdateProfile request, CancellationToken cancellationToken)
         {
-            // Find profile with user id.
+            // Find profile.
             var profile = await this.unitOfWork.Profiles.Read(request.UserId);
 
-            // Update bio or imagelink
-            profile.Bio = request.Bio;
-            profile.ImageLink = request.ImageLink;
+            // Update profile.
+            profile.Update(new MutateProfileRequest
+            {
+                Bio = request.Bio,
+                ImageUrl = request.ImageUrl,
+                DisplayName = request.DisplayName,
+            });
 
-            // Update profile
-            var updatedProfile = await this.unitOfWork.Profiles.Update(profile);
-
-            // Save the changes to the database transactionally.
+            // Save updated profile.
+            await this.unitOfWork.Profiles.Update(profile);
             await this.unitOfWork.SaveAsync();
 
             // Return updated profile data.
-            return updatedProfile;
+            return profile;
         }
     }
 }

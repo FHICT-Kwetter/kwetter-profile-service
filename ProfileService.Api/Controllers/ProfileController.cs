@@ -46,7 +46,7 @@ namespace ProfileService.Api.Controllers
                 Username = result.Username,
                 DisplayName = result.DisplayName,
                 Bio = result.Bio,
-                ImageLink = result.ImageLink,
+                ImageUrl = result.ImageUrl,
             };
             return this.Ok(profile);
         }
@@ -56,7 +56,7 @@ namespace ProfileService.Api.Controllers
         public async Task<IActionResult> UpdateProfile([FromBody] EditProfileRequest request)
         {
             var userId = Guid.Parse(this.User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
-            var result = await this.mediator.Send(new UpdateProfile(userId, request.Bio, request.ImageLink));
+            var result = await this.mediator.Send(new UpdateProfile(userId, request.Bio, request.ImageUrl, request.DisplayName));
             return this.Ok(result);
         }
     }

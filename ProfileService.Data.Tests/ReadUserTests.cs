@@ -7,6 +7,8 @@ using ProfileService.Data.Contexts;
 using ProfileService.Data.Mapping;
 using ProfileService.Data.UnitOfWork;
 using ProfileService.Domain.Exceptions;
+using ProfileService.Domain.Models;
+using ProfileService.Domain.Requests;
 using Profile = ProfileService.Domain.Models.Profile;
 
 namespace ProfileService.Data.Tests
@@ -49,7 +51,7 @@ namespace ProfileService.Data.Tests
             Assert.AreEqual(profile.Username, readProfile.Username);
             Assert.AreEqual(profile.DisplayName, readProfile.DisplayName);
             Assert.AreEqual(profile.Bio, readProfile.Bio);
-            Assert.AreEqual(profile.ImageLink, readProfile.ImageLink);
+            Assert.AreEqual(profile.ImageUrl, readProfile.ImageUrl);
         }
 
         [Test]
@@ -65,7 +67,7 @@ namespace ProfileService.Data.Tests
             Assert.AreEqual(profile.Username, readProfile.Username);
             Assert.AreEqual(profile.DisplayName, readProfile.DisplayName);
             Assert.AreEqual(profile.Bio, readProfile.Bio);
-            Assert.AreEqual(profile.ImageLink, readProfile.ImageLink);
+            Assert.AreEqual(profile.ImageUrl, readProfile.ImageUrl);
         }
 
         [Test]
@@ -82,13 +84,13 @@ namespace ProfileService.Data.Tests
 
         private async Task<Profile> CreateTestProfile()
         {
-            var profile = new Profile
+            var profile = Profile.Create(new CreateProfileRequest
             {
                 Username = "tester",
                 Bio = "bio",
                 DisplayName = "Test Profile",
-                ImageLink = "imageLink"
-            };
+                ImageUrl = "ImageUrl"
+            });
 
             await this.unitOfWork.Profiles.Create(profile, userId);
             await this.unitOfWork.SaveAsync();

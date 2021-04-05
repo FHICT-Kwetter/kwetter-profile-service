@@ -15,6 +15,6 @@ namespace ProfileService.Api.Contracts.Requests
         /// <summary>
         /// The link to the profile image of the user.
         /// </summary>
-        public string ImageLink { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

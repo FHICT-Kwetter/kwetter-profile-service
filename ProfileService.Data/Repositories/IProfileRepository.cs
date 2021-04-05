@@ -102,7 +102,7 @@ namespace ProfileService.Data.Repositories
                 UserId = userId,
                 Username = profile.Username,
                 Bio = profile.Bio,
-                ImageUrl = profile.ImageLink,
+                ImageUrl = profile.ImageUrl,
                 DisplayName = profile.DisplayName,
             };
 
@@ -155,7 +155,7 @@ namespace ProfileService.Data.Repositories
             }
 
             foundProfile.Bio = profile.Bio;
-            foundProfile.ImageUrl = profile.ImageLink;
+            foundProfile.ImageUrl = profile.ImageUrl;
 
             this.context.Update(foundProfile);
             return profile;

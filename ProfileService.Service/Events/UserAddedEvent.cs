@@ -10,6 +10,7 @@ namespace ProfileService.Service.Events
     using System.Threading.Tasks;
     using ProfileService.Data.UnitOfWork;
     using ProfileService.Domain.Models;
+    using ProfileService.Domain.Requests;
     using ProfileService.Messaging.Common.Attributes;
     using ProfileService.Messaging.Common.Events;
 
@@ -20,17 +21,12 @@ namespace ProfileService.Service.Events
     public class UserAddedEvent : IEventNotification
     {
         /// <summary>
-        /// The user id.
+        /// Gets or sets the user id.
         /// </summary>
         public Guid UserId { get; set; }
 
         /// <summary>
-        /// The users email address.
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// The users username.
+        /// Gets or sets the users username.
         /// </summary>
         public string Username { get; set; }
     }
@@ -62,12 +58,12 @@ namespace ProfileService.Service.Events
         /// <returns>An awaitable task.</returns>
         public async Task Handle(UserAddedEvent eventParam, CancellationToken cancellationToken)
         {
-            var createdProfile = new Profile
+            var createdProfile = Profile.Create(new CreateProfileRequest
             {
                 Username = eventParam.Username,
                 Bio = string.Empty,
-                ImageLink = "https://ik.imagekit.io/5ii0qakqx65/profile_placeholder_i-fAWNvvvrMy.jpg",
-            };
+                ImageUrl = "https://ik.imagekit.io/5ii0qakqx65/profile_placeholder_i-fAWNvvvrMy.jpg",
+            });
 
             await this.unitOfWork.Profiles.Create(createdProfile, eventParam.UserId);
             await this.unitOfWork.SaveAsync();

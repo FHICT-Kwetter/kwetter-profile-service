@@ -7,6 +7,8 @@ using ProfileService.Data.Contexts;
 using ProfileService.Data.Mapping;
 using ProfileService.Data.UnitOfWork;
 using ProfileService.Domain.Exceptions;
+using ProfileService.Domain.Models;
+using ProfileService.Domain.Requests;
 using Profile = ProfileService.Domain.Models.Profile;
 
 namespace ProfileService.Data.Tests
@@ -54,7 +56,7 @@ namespace ProfileService.Data.Tests
         public async Task Given_A_Non_Existing_Profile__When_Deleting_Profile__Throws_Profile_Not_Found_Exception()
         {
             // Arrange
-            var profile = new Profile() { Username = "Non-existing profile" };
+            var profile = Profile.Create(new CreateProfileRequest { Username = "Non-existing profile" });
             
             // Act + Assert
             Assert.That(async () => await this.unitOfWork.Profiles.Read(profile.Username), Throws.InstanceOf<ProfileNotFoundException>());
@@ -62,13 +64,13 @@ namespace ProfileService.Data.Tests
         
         private async Task<Profile> CreateTestProfile()
         {
-            var profile = new Profile
+            var profile = Profile.Create(new CreateProfileRequest
             {
                 Username = "tester",
                 Bio = "bio",
                 DisplayName = "Test Profile",
-                ImageLink = "imageLink"
-            };
+                ImageUrl = "ImageUrl"
+            });
 
             await this.unitOfWork.Profiles.Create(profile, userId);
             await this.unitOfWork.SaveAsync();
