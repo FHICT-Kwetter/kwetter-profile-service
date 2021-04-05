@@ -5,26 +5,13 @@
 
 namespace ProfileService.Data.Contexts
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using ProfileService.Data.Entities;
-
-    public interface IProfileContext
-    {
-        DbSet<ProfileEntity> Profiles { get; set; }
-
-        EntityEntry<TEntity> Update<TEntity>([NotNull] TEntity entity) where TEntity : class;
-
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
-    }
 
     /// <summary>
     /// Defines the database context for the application.
     /// </summary>
-    public class ProfileContext : DbContext, IProfileContext
+    public class ProfileContext : DbContext
     {
         /// <summary>
         /// Gets or sets the profile entity db set.

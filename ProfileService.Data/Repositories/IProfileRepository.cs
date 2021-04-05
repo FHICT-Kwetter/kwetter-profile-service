@@ -66,7 +66,7 @@ namespace ProfileService.Data.Repositories
         /// <summary>
         /// The database context.
         /// </summary>
-        private readonly IProfileContext context;
+        private readonly ProfileContext context;
 
         /// <summary>
         /// The automapper.
@@ -78,7 +78,7 @@ namespace ProfileService.Data.Repositories
         /// </summary>
         /// <param name="context">The database context.</param>
         /// <param name="mapper">The automapper.</param>
-        public ProfileRepository(IProfileContext context, IMapper mapper)
+        public ProfileRepository(ProfileContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;

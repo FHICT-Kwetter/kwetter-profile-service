@@ -28,7 +28,6 @@ namespace ProfileService.Data.Extensions
                 options.UseNpgsql(configuration.GetConnectionString("GoogleCloudSQL"));
             });
 
-            services.AddScoped<IProfileContext, ProfileContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(typeof(ServiceCollectionExtensions));
         }

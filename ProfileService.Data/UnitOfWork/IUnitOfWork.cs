@@ -3,11 +3,10 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
-using AutoMapper;
-
 namespace ProfileService.Data.UnitOfWork
 {
     using System.Threading.Tasks;
+    using AutoMapper;
     using ProfileService.Data.Contexts;
     using ProfileService.Data.Repositories;
 
@@ -36,7 +35,7 @@ namespace ProfileService.Data.UnitOfWork
         /// <summary>
         /// The database context.
         /// </summary>
-        private readonly IProfileContext context;
+        private readonly ProfileContext context;
 
         /// <inheritdoc/>
         public IProfileRepository Profiles { get; }
@@ -46,7 +45,7 @@ namespace ProfileService.Data.UnitOfWork
         /// </summary>
         /// <param name="context">The database context.</param>
         /// <param name="mapper">The automapper.</param>
-        public UnitOfWork(IProfileContext context, IMapper mapper)
+        public UnitOfWork(ProfileContext context, IMapper mapper)
         {
             this.context = context;
 

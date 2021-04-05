@@ -7,7 +7,6 @@ using ProfileService.Data.Contexts;
 using ProfileService.Data.Mapping;
 using ProfileService.Data.UnitOfWork;
 using ProfileService.Domain.Exceptions;
-using ProfileService.Domain.Models;
 using ProfileService.Domain.Requests;
 using Profile = ProfileService.Domain.Models.Profile;
 
@@ -41,7 +40,13 @@ namespace ProfileService.Data.Tests
         public async Task Given_A_New_Profile__When_Creating_Profile__UnitOfWork_Returns_Correct_Profile_Data()
         {
             // Arrange
-            var profile = await this.CreateTestProfile();
+            var profile = Profile.Create(new CreateProfileRequest()
+            {
+                Username = "Username",
+                DisplayName = "Display Name",
+                Bio = "Bio",
+                ImageUrl = "link"
+            });
 
             // Act
             var createdProfile = await this.unitOfWork.Profiles.Create(profile, userId);
@@ -89,11 +94,7 @@ namespace ProfileService.Data.Tests
             // Arrange 1 
             var profile = await this.CreateTestProfile();
 
-            // Act
-            await this.unitOfWork.Profiles.Create(profile, this.userId);
-            await this.unitOfWork.SaveAsync();
-            
-            // Assert
+            // Act + Assert
             Assert.That(async () => await this.unitOfWork.Profiles.Create(profile, this.userId), Throws.InstanceOf<ProfileCreationException>());
         }
         
