@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Api", "ProfileService.Api\ProfileService.Api.csproj", "{2AF8E426-6FB5-421A-902F-6B0CB6207CDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Messaging", "ProfileService.Messaging\ProfileService.Messaging.csproj", "{A2B66C83-8AE8-4E7F-89FA-ECE89E77A64D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Service", "ProfileService.Service\ProfileService.Service.csproj", "{BF0FE6E4-01F6-462B-A689-989D4BD4BEE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService.Domain", "ProfileService.Domain\ProfileService.Domain.csproj", "{F658CADC-230A-4B79-BEBE-FCC3D046B181}"
@@ -26,10 +24,6 @@ Global
 		{2AF8E426-6FB5-421A-902F-6B0CB6207CDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AF8E426-6FB5-421A-902F-6B0CB6207CDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AF8E426-6FB5-421A-902F-6B0CB6207CDE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2B66C83-8AE8-4E7F-89FA-ECE89E77A64D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2B66C83-8AE8-4E7F-89FA-ECE89E77A64D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2B66C83-8AE8-4E7F-89FA-ECE89E77A64D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2B66C83-8AE8-4E7F-89FA-ECE89E77A64D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF0FE6E4-01F6-462B-A689-989D4BD4BEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF0FE6E4-01F6-462B-A689-989D4BD4BEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF0FE6E4-01F6-462B-A689-989D4BD4BEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU

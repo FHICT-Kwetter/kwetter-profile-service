@@ -3,22 +3,17 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-
 WORKDIR /src
 COPY ["ProfileService.Api/ProfileService.Api.csproj", "ProfileService.Api/"]
 COPY ["ProfileService.Data/ProfileService.Data.csproj", "ProfileService.Data/"]
 COPY ["ProfileService.Domain/ProfileService.Domain.csproj", "ProfileService.Domain/"]
-COPY ["ProfileService.Messaging/ProfileService.Messaging.csproj", "ProfileService.Messaging/"]
 COPY ["ProfileService.Service/ProfileService.Service.csproj", "ProfileService.Service/"]
-
 RUN dotnet restore "ProfileService.Api/ProfileService.Api.csproj"
 COPY . .
 WORKDIR /src/ProfileService.Api
-
 RUN dotnet build "ProfileService.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-
 RUN dotnet publish "ProfileService.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final

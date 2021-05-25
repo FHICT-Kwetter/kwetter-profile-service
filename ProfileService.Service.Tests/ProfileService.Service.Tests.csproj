@@ -14,10 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Events" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\ProfileService.Service\ProfileService.Service.csproj" />
     </ItemGroup>
 

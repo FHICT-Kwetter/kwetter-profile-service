@@ -41,6 +41,7 @@ namespace ProfileService.Api.Controllers
         public async Task<IActionResult> ReadProfile([FromRoute] string username)
         {
             var result = await this.mediator.Send(new ReadProfile(username));
+
             var profile = new ReadProfileResponse
             {
                 Username = result.Username,
@@ -48,6 +49,7 @@ namespace ProfileService.Api.Controllers
                 Bio = result.Bio,
                 ImageUrl = result.ImageUrl,
             };
+
             return this.Ok(profile);
         }
 

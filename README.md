@@ -1,5 +1,16 @@
-# Overview
-![CI/CD Pipeline](https://github.com/FHICT-Kwetter/kwetter-profile-service/workflows/cicd/badge.svg)
+# Profile Service
+
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/dashboard?id=FHICT-Kwetter_kwetter-identity)
+
+![build](https://github.com/FHICT-Kwetter/kwetter-identity/workflows/pipeline/badge.svg)
+![Coverage](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=coverage)
+![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=sqale_rating)
+![Reliability](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=reliability_rating)
+![Security](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=security_rating)
+![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=vulnerabilities)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=FHICT-Kwetter_kwetter-identity&metric=bugs)
+
+## Overview
 
 This repo contains all the source code for the kwetter profile microservice.
 

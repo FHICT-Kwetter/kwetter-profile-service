@@ -5,15 +5,13 @@
 
 namespace ProfileService.Api
 {
-    using KubeMQ.SDK.csharp.Subscription;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using ProfileService.Api.Extensions;
     using ProfileService.Data.Extensions;
-    using ProfileService.Messaging.Extensions;
-    using ProfileService.Messaging.KubeMq;
     using ProfileService.Service.Extensions;
 
     /// <summary>
@@ -39,14 +37,12 @@ namespace ProfileService.Api
         /// Configures the services.
         /// This method gets called by the runtime. Use this method to add services to the container.
         /// </summary>
-        /// <param name="services">The services<see cref="IServiceCollection" />.</param>
+        /// <param name="services">The services <see cref="IServiceCollection" />.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddDatabaseLayer(this.configuration);
-            services.AddIdentityServerAuthorization(this.configuration);
+            services.AddApiLayer(this.configuration);
             services.AddServiceLayer(this.configuration);
-            services.AddKubeMqMessaging(this.configuration);
+            services.AddDatabaseLayer(this.configuration);
         }
 
         /// <summary>
@@ -55,15 +51,16 @@ namespace ProfileService.Api
         /// </summary>
         /// <param name="app">The application.</param>
         /// <param name="env">The environment.</param>
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IKubeMqServer kubeMqServer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UsePathBase(new PathString("/api/profile"));
+            app.UseHealthChecks("/api/profile/health");
+            app.UseHealthChecks("/health");
             app.UseRouting();
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(x => x.WithOrigins("https://kwetter.org", "https://www.kwetter.org").AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
-            kubeMqServer.PubSubManager.SubscribeToEventStore("users", EventsStoreType.StartNewOnly);
         }
     }
 }

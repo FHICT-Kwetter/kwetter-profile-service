@@ -11,11 +11,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@main
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.100'
+
       - name: Build
-        run: dotnet build ProfileService.Api/ProfileService.Api.csproj --configuration Release
-      - name: Test
-        run: dotnet test
+        run: dotnet build ProfileService.Api/ProfileService.Api.csproj
+
+      - name: Test - Analyze - Coverage
+        uses: highbyte/sonarscan-dotnet@2.0
+        with:
+          sonarProjectKey: FHICT-Kwetter_kwetter-identity
+          sonarProjectName:  kwetter-identity
+          sonarOrganization: dirkheijnen-github
+          dotnetTestArguments: --logger trx --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          sonarBeginArguments: /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml" -d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish Docker Image
+        uses: kurkop/push-docker-gcr@v1.2.2
+        with:
+          docker_image_name: kwetter-profile-server
+          docker_image_tag: latest
+          docker_context: .
+          gcr_host: eu.gcr.io
+          gcr_project_id: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+          gcr_service_key: ${{ secrets.GOOGLE_CLOUD_REGISTRY_SA_JSON }}
+
+      - name: Deploy to Kubernetes
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CLOUD_KUBERNETES_SA_BASE64 }}
+          CLUSTER_NAME: cluster-1
+          ZONE_NAME: europe-west4-a
+        with:
+          args: apply -f ./deployment.yml

@@ -1,0 +1,49 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kwetter-profile-server
+  labels:
+    k8s-app: kwetter-profile-server
+spec:
+  selector:
+    matchLabels:
+      app: kwetter-profile-server
+  template:
+    metadata:
+      labels:
+        app: kwetter-profile-server
+    spec:
+      containers:
+        - name: kwetter-profile-server
+          image: eu.gcr.io/kwetter-308618/kwetter-profile-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kwetter-profile-server
+spec:
+  selector:
+    app: kwetter-profile-server
+  ports:
+    - protocol: TCP
+      name: http
+      targetPort: 80
+      port: 80
