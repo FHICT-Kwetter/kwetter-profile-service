@@ -1,3 +1,6 @@
+# workaround for https://github.com/grpc/grpc/issues/24153
+RUN apt-get update && apt-get install -y libc-dev && apt-get clean
+
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
