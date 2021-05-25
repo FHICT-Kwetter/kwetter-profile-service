@@ -1,0 +1,70 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kwetter-profile-service
+  labels:
+    k8s-app: kwetter-profile-service
+spec:
+  selector:
+    matchLabels:
+      app: kwetter-profile-service
+  template:
+    metadata:
+      labels:
+        app: kwetter-profile-service
+    spec:
+      containers:
+        - name: kwetter-profile-service
+          image: eu.gcr.io/kwetter-308618/kwetter-profile-service:latest
+          imagePullPolicy: Always
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/gcp/sa_credentials.json
+            - name: GOOGLE_CLOUD_SQL
+              valueFrom:
+                secretKeyRef:
+                  name: google-cloud-sql-connection-string
+                  key: connection_string
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: service-account-credentials-volume
+              mountPath: /etc/gcp
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: service-account-credentials-volume
+          secret:
+            secretName: pubsub-service-account-credentials
+            items:
+              - key: sa_json
+                path: sa_credentials.json
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kwetter-profile-service
+spec:
+  selector:
+    app: kwetter-profile-service
+  ports:
+    - protocol: TCP
+      name: http
+      targetPort: 80
+      port: 80
