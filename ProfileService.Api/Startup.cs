@@ -3,8 +3,6 @@
 // </copyright>
 // <author>Dirk Heijnen</author>
 
-using MediatR;
-
 namespace ProfileService.Api
 {
     using Microsoft.AspNetCore.Builder;
@@ -66,8 +64,7 @@ namespace ProfileService.Api
             app.UseHealthChecks("/api/profile/health");
             app.UseHealthChecks("/health");
             app.UseRouting();
-            app.UseCors(x =>
-                x.WithOrigins("https://kwetter.org", "https://www.kwetter.org").AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(x => x.WithOrigins("https://kwetter.org", "https://www.kwetter.org").AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

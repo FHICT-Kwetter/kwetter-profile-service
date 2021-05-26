@@ -11,7 +11,7 @@ namespace ProfileService.Api
     /// <summary>
     /// Defines the <see cref="Program" />
     /// </summary>
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// The Main

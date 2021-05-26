@@ -13,6 +13,14 @@ spec:
       labels:
         app: kwetter-profile-service
     spec:
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: service-account-credentials-volume
+          secret:
+            secretName: pubsub-service-account-credentials
+            items:
+              - key: sa_json
+                path: sa_credentials.json
       containers:
         - name: kwetter-profile-service
           image: eu.gcr.io/kwetter-308618/kwetter-profile-service:latest
@@ -47,24 +55,3 @@ spec:
               scheme: HTTP
             initialDelaySeconds: 5
             periodSeconds: 5
-      volumes:
-        - name: service-account-credentials-volume
-          secret:
-            secretName: pubsub-service-account-credentials
-            items:
-              - key: sa_json
-                path: sa_credentials.json
-
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: kwetter-profile-service
-spec:
-  selector:
-    app: kwetter-profile-service
-  ports:
-    - protocol: TCP
-      name: http
-      targetPort: 80
-      port: 80

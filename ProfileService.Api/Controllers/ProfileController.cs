@@ -16,6 +16,9 @@ namespace ProfileService.Api.Controllers
     using ProfileService.Api.Contracts.Responses;
     using ProfileService.Service.UseCases;
 
+    /// <summary>
+    /// The <see cref="ProfileController"/>.
+    /// </summary>
     [ApiController]
     [Authorize]
     [Produces(MediaTypeNames.Application.Json)]
@@ -57,7 +60,7 @@ namespace ProfileService.Api.Controllers
         [HttpPut("me")]
         public async Task<IActionResult> UpdateProfile([FromBody] EditProfileRequest request)
         {
-            var userId = Guid.Parse(this.User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value);
+            var userId = Guid.Parse(this.User.Claims.First(x => x.Type == "sub").Value);
             var result = await this.mediator.Send(new UpdateProfile(userId, request.Bio, request.ImageUrl, request.DisplayName));
             return this.Ok(result);
         }

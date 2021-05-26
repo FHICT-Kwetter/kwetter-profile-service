@@ -61,4 +61,14 @@ jobs:
           CLUSTER_NAME: cluster-1
           ZONE_NAME: europe-west4-a
         with:
-          args: apply -f ./deployment.yml
+          args: apply -f ./k8s-manifests
+
+      - name: Rollout to Kubernetes
+        uses: ameydev/gke-kubectl-action@master
+        env:
+          PROJECT_ID: ${{ secrets.GOOGLE_CLOUD_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CLOUD_KUBERNETES_SA_BASE64 }}
+          CLUSTER_NAME: cluster-1
+          ZONE_NAME: europe-west4-a
+        with:
+          args: rollout restart deployment/kwetter-identity-server

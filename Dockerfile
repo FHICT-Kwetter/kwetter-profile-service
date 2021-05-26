@@ -11,6 +11,8 @@ COPY ["ProfileService.Api/ProfileService.Api.csproj", "ProfileService.Api/"]
 COPY ["ProfileService.Data/ProfileService.Data.csproj", "ProfileService.Data/"]
 COPY ["ProfileService.Domain/ProfileService.Domain.csproj", "ProfileService.Domain/"]
 COPY ["ProfileService.Service/ProfileService.Service.csproj", "ProfileService.Service/"]
+COPY ["ProfileService.PubSub/ProfileService.PubSub.csproj", "ProfileService.PubSub/"]
+
 RUN dotnet restore "ProfileService.Api/ProfileService.Api.csproj"
 COPY . .
 WORKDIR /src/ProfileService.Api
