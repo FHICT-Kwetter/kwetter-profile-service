@@ -32,13 +32,14 @@ namespace ProfileService.Api.Extensions
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = env == "Production" ? "https://www.kwetter.org/api/auth" : "http://localhost:5000";
+                    options.Authority = env == "Production" ? "https://www.kwetter.org/api/auth" : "http://localhost:5000/api/auth";
                     options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false,
                         ValidateIssuer = true,
                     };
+                    options.MapInboundClaims = false;
                 });
             services.AddAuthorization();
         }

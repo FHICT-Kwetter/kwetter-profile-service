@@ -39,6 +39,24 @@ namespace ProfileService.Api.Controllers
             this.mediator = mediator;
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ReadProfileOwn()
+        {
+            var userId = Guid.Parse(this.User.Claims.First(x => x.Type == "sub").Value);
+            var result = await this.mediator.Send(new ReadProfile(userId));
+
+            var profile = new ReadProfileResponse
+            {
+                Username = result.Username,
+                DisplayName = result.DisplayName,
+                Bio = result.Bio,
+                ImageUrl = result.ImageUrl,
+            };
+
+            return this.Ok(profile);
+        }
+
         [AllowAnonymous]
         [HttpGet("{username}")]
         public async Task<IActionResult> ReadProfile([FromRoute] string username)

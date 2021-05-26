@@ -156,6 +156,7 @@ namespace ProfileService.Data.Repositories
 
             foundProfile.Bio = profile.Bio;
             foundProfile.ImageUrl = profile.ImageUrl;
+            foundProfile.DisplayName = profile.DisplayName;
 
             this.context.Update(foundProfile);
             return profile;
