@@ -23,13 +23,14 @@ namespace ProfileService.Service.Events
         {
             var profile = Profile.Create(new CreateProfileRequest
             {
+                UserId = request.UserId,
                 Username = request.Username,
                 Bio = $"{request.Username}'s Kwetter Profile",
                 ImageUrl = "https://ik.imagekit.io/5ii0qakqx65/profile_placeholder_i-fAWNvvvrMy.jpg",
                 DisplayName = request.Username,
             });
 
-            await this.unitOfWork.Profiles.Create(profile, request.UserId);
+            await this.unitOfWork.Profiles.Create(profile);
             await this.unitOfWork.SaveAsync();
 
             return Unit.Value;

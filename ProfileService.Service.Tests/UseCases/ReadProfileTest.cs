@@ -70,13 +70,14 @@ namespace ProfileService.Service.Tests.UseCases
         {
             var profile = Profile.Create(new CreateProfileRequest
             {
+                UserId = userId,
                 Username = "tester",
                 Bio = "bio",
                 DisplayName = "Test Profile",
                 ImageUrl = "ImageUrl"
             });
 
-            await this.unitOfWork.Profiles.Create(profile, userId);
+            await this.unitOfWork.Profiles.Create(profile);
             await this.unitOfWork.SaveAsync();
 
             return profile;

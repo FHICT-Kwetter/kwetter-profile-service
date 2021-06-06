@@ -42,6 +42,7 @@ namespace ProfileService.Data.Tests
             // Arrange
             var profile = Profile.Create(new CreateProfileRequest()
             {
+                UserId = userId,
                 Username = "Username",
                 DisplayName = "Display Name",
                 Bio = "Bio",
@@ -49,7 +50,7 @@ namespace ProfileService.Data.Tests
             });
 
             // Act
-            var createdProfile = await this.unitOfWork.Profiles.Create(profile, userId);
+            var createdProfile = await this.unitOfWork.Profiles.Create(profile);
             await this.unitOfWork.SaveAsync();
             
             // Assert
@@ -95,20 +96,21 @@ namespace ProfileService.Data.Tests
             var profile = await this.CreateTestProfile();
 
             // Act + Assert
-            Assert.That(async () => await this.unitOfWork.Profiles.Create(profile, this.userId), Throws.InstanceOf<ProfileCreationException>());
+            Assert.That(async () => await this.unitOfWork.Profiles.Create(profile), Throws.InstanceOf<ProfileCreationException>());
         }
         
         private async Task<Profile> CreateTestProfile()
         {
             var profile = Profile.Create(new CreateProfileRequest
             {
+                UserId = userId,
                 Username = "tester",
                 Bio = "bio",
                 DisplayName = "Test Profile",
                 ImageUrl = "ImageUrl"
             });
 
-            await this.unitOfWork.Profiles.Create(profile, userId);
+            await this.unitOfWork.Profiles.Create(profile);
             await this.unitOfWork.SaveAsync();
 
             return profile;

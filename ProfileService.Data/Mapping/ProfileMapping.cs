@@ -18,6 +18,7 @@ namespace ProfileService.Data.Mapping
         public ProfileMapping()
         {
             this.CreateMap<Domain.Models.Profile, ProfileEntity>()
+                .ForMember(e => e.UserId, expression => expression.MapFrom(d => d.UserId))
                 .ForMember(e => e.Username, expression => expression.MapFrom(d => d.Username))
                 .ForMember(e => e.Bio, expression => expression.MapFrom(d => d.Bio))
                 .ForMember(e => e.DisplayName, expression => expression.MapFrom(d => d.DisplayName))

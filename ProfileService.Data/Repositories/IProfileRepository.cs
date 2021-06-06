@@ -27,7 +27,7 @@ namespace ProfileService.Data.Repositories
         /// <param name="profile">The <see cref="Profile"/> to add to the database.</param>
         /// <param name="userId">The user id of the user creating the profile.</param>
         /// <returns>The created profile.</returns>
-        Task<Profile> Create(Profile profile, Guid userId);
+        Task<Profile> Create(Profile profile);
 
         /// <summary>
         /// Finds a profile by a username.
@@ -85,21 +85,21 @@ namespace ProfileService.Data.Repositories
         }
 
         /// <inheritdoc/>
-        public async Task<Profile> Create(Profile profile, Guid userId)
+        public async Task<Profile> Create(Profile profile)
         {
             if (await this.context.Profiles.FirstOrDefaultAsync(x => x.Username.ToLower().Contains(profile.Username.ToLower())) != null)
             {
                 throw new ProfileCreationException("Profile with this username already exists.");
             }
 
-            if (await this.context.Profiles.FirstOrDefaultAsync(x => x.UserId == userId) != null)
+            if (await this.context.Profiles.FirstOrDefaultAsync(x => x.UserId == profile.UserId) != null)
             {
                 throw new ProfileCreationException("This user already has a profile.");
             }
 
             var profileEntity = new ProfileEntity
             {
-                UserId = userId,
+                UserId = profile.UserId,
                 Username = profile.Username,
                 Bio = profile.Bio,
                 ImageUrl = profile.ImageUrl,
@@ -115,7 +115,7 @@ namespace ProfileService.Data.Repositories
         {
             var foundProfile = await this.context.Profiles
                 .AsNoTracking()
-                .Where(x => x.Username.ToLower().Contains(username.ToLower()))
+                .Where(x => x.Username.ToLower().Equals(username.ToLower()))
                 .FirstOrDefaultAsync();
 
             if (foundProfile == null)

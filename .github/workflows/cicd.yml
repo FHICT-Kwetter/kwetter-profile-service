@@ -71,4 +71,4 @@ jobs:
           CLUSTER_NAME: cluster-1
           ZONE_NAME: europe-west4-a
         with:
-          args: rollout restart deployment/kwetter-identity-server
+          args: rollout restart deployment/kwetter-profile-service

@@ -5,11 +5,18 @@
 
 namespace ProfileService.Api.Contracts.Responses
 {
+    using System;
+
     /// <summary>
     /// Defines the <see cref="ReadProfileResponse"/>
     /// </summary>
     public class ReadProfileResponse
     {
+        /// <summary>
+        /// Gets or sets the users id.
+        /// </summary>
+        public Guid UserId { get; set; }
+
         /// <summary>
         /// Gets or sets the username of the user.
         /// </summary>

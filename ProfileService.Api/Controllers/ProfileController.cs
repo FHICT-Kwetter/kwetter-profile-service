@@ -39,6 +39,15 @@ namespace ProfileService.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
+        [HttpGet("{id}/userinfo")]
+        public async Task<IActionResult> ReadUserInfo([FromRoute] string id)
+        {
+            var userId = Guid.Parse(id);
+            var result = await this.mediator.Send(new GetUserInfo() { userId = userId });
+            return this.Ok(result);
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> ReadProfileOwn()
@@ -48,6 +57,7 @@ namespace ProfileService.Api.Controllers
 
             var profile = new ReadProfileResponse
             {
+                UserId = result.UserId,
                 Username = result.Username,
                 DisplayName = result.DisplayName,
                 Bio = result.Bio,
@@ -65,6 +75,7 @@ namespace ProfileService.Api.Controllers
 
             var profile = new ReadProfileResponse
             {
+                UserId = result.UserId,
                 Username = result.Username,
                 DisplayName = result.DisplayName,
                 Bio = result.Bio,
